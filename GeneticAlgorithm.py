@@ -67,7 +67,7 @@ def calculateFitness():
     fitness.clear()
 
     for i in population:
-        s = calculateDistance(i)
+        s = 1 / calculateDistance(i)
         fitness.append(s)
         
     normalizeFitnes()
@@ -157,7 +157,7 @@ def GeneticAlgorithm(popSize, genCount, mutationRate, city_db):
 
     cities.clear()
     cities = city_db[:]
-
+    
     for ind, coords in enumerate(cities): 
         order.append(ind)
     order.append(order[0])
