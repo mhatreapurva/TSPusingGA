@@ -1,0 +1,111 @@
+button {
+    padding: 12px;
+    border-radius: 50px;
+    width: 180px;
+    outline: none;
+    border: none;
+    display: block;
+    margin: 12px;
+    font-family:  Helvetica, sans-serif;
+    text-emphasis: bold;
+    font-size: 12px;
+    position: relative;
+    left: 70px;
+}
+
+#sim_btn {
+    background: linear-gradient(to right, #3297e5, #0e4b8c);
+    color: white;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: 380px 800px;
+    grid-template-areas: "toolbar drawing";
+}
+
+body {
+    overflow: hidden;
+}
+
+header {
+    background-color: black;
+
+    padding: 25px;
+    text-align: left;
+
+
+}
+
+h1 {
+    font-family: 'Quicksand', sans-serif;
+    letter-spacing: 5px;
+    color: white;
+}
+
+h4 {
+    color: white;
+    font-family: sans-serif;
+}
+
+input {
+    background-color: black;
+    padding: 12px;
+    color: grey;
+    font-family:  Calibri, sans-serif;
+    font-size: 16px;
+    border: none;
+    border-bottom-color: rgb(135, 135, 135);
+    border-bottom: 2px solid;
+    text-align: right;
+    color: white;
+    background-color: #121313;
+    display: block;
+    margin: 12px;
+    outline: none;
+    width:200px;
+    position: relative;
+    left: 50px;
+}
+
+#toolbar {
+    grid-area: toolbar;
+    float: left;
+    left: 50%;
+    background-color: rgb(0, 0, 0);
+    display: block;
+    float: center;
+    height: 900px;
+    width: 380px;
+    box-shadow: grey 19px 19px 35px;
+}
+
+#city_map {
+    display: grid;
+    grid-area: drawing;
+    background-color: rgb(255, 255, 255);
+
+}
+
+#reset_entire {
+    text-decoration: underline;
+    color: rgb(222, 15, 15);
+    cursor: pointer;
+    position: fixed;
+    left: 130px;
+    bottom:30px;
+}
+
+#input_params p {
+    color: rgb(191, 191, 191);
+    position: relative;
+    left: 25px;
+}
+
+#distance_out {
+    color:white;
+    position: fixed;
+    bottom:80px;
+    left: 25px;
+    font-family: 'Comfortaa', cursive; 
+}

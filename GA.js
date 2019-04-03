@@ -1,6 +1,3 @@
-
-sample_coords = [[280, 300], [408, 310], [301, 207], [120, 260], [140, 800], [170, 209], [450, 310], [370, 440], [600, 220], [480, 100], [180, 170], [800, 101], [500, 390], [600, 300], [150, 800], [750, 490], [210, 300], [550, 180], [240, 110], [220, 600]]
-sample_coords_1 = [[400,800],[600,200],[200,600],[600,800],[400,200],[200,400],[800,600],[800,400]]
 cities = []
 
 var total_cities = 0
@@ -23,6 +20,7 @@ var initialize = true
 var addCity = false
 
 var x = []
+var graphBR = []
 
 function swapp (a,b, arr) {
    
@@ -92,6 +90,7 @@ function calculateDistance(route){
 
     if (total_distance < recordDistance){
         recordDistance = total_distance;
+        graphBR.push(recordDistance)
         bestRoute = population[route];
     }
     return (total_distance);
@@ -180,25 +179,12 @@ function nextGeneration(){
 
 
 function setup() {
-    createCanvas(1000,900)
-    background(255,251,247)
-
-    cities.length = 0
-
-    // cities = sample_coords_1
-    // total_cities = cities.length
-    // make_order()
-    // bestRoute = order
-    // testRoute = order
-    // generate_init_pop();
-  
+    let can = createCanvas(1000,800)
+    can.parent('city_map');    
+        cities.length = 0
 }
 
 function show() {
-    fill('red');
-    noStroke()
-    circle(cities[0][0], cities[0][1], 10);
-
     fill(255);
     stroke(0)
     circle(cities[0][0], cities[0][1], 13);
@@ -206,18 +192,20 @@ function show() {
     text('STARTING CITY',cities[0][0]+10, cities[0][1]+10)
     
     noStroke()
-    for(let i = 1; i < total_cities; i++){
+    for(let i = 0; i < total_cities; i++){
         fill(0)
         circle(cities[i][0], cities[i][1], 6);
         fill(10)
-        text('City '+i,cities[i][0]+8, cities[i][1]+8)
+        if(i != 0)
+        {text('City '+i,cities[i][0]+8, cities[i][1]+8)}
     }
     
     stroke(221,8,69);    
     strokeWeight(2);
-    for(let i = 0; i < total_cities; i++){
+    if(bestRoute.length>0)
+    {for(let i = 0; i < total_cities; i++){
         line(cities[bestRoute[i]][0],cities[bestRoute[i]][1],cities[bestRoute[i+1]][0],cities[bestRoute[i+1]][1]);
-    }
+    }}
 
     stroke(216,216,216);    
     strokeWeight(1);
@@ -244,16 +232,20 @@ function addToCity(x){
     
 }
 
+function init_ui(){
+    if(cities.length == 0 ){
+        document.getElementById ('sim_btn').style.display = "none";
+        document.getElementById('input_params').style.display = "none"
+        document.getElementById('rem_city_btn').style.display = "none"
+    }
+}
 
 function draw() {
-    
-    population_size = document.getElementById('population_size').value;
-    mutation_rate = document.getElementById('mutation_rate').value;
+
+    init_ui()
 
     if(addCity == true){
-        
-        document.getElementById('sim_btn').disabled = true;
-       
+        document.getElementById('rem_city_btn').style.display = "block"
         if(mouseIsPressed && pmouseX > 0 && pmouseY > 0){
            x = [pmouseX, pmouseY] 
             
@@ -264,15 +256,18 @@ function draw() {
         clear()
         show()
         x.length = 0
-        }
-            
-    }else {
-        document.getElementById('sim_btn').disabled = false;
-
+        }       
     }
-    
+    if(document.getElementById('population_size').value > 0 && document.getElementById('mutation_rate').value > 0 && addCity === false && document.getElementById('mutation_rate').value < 1 ){
+        document.getElementById('sim_btn').style.display = "block"
+    }
+    else{
+        document.getElementById('sim_btn').style.display = "none"
+    }
   
-    if(start_sim === true && population_size > 0 && mutation_rate > 0){
+    if(start_sim === true){
+        population_size = document.getElementById('population_size').value;
+        mutation_rate = document.getElementById('mutation_rate').value;
         clear()  
         show()
         if(initialize == true){
@@ -281,6 +276,7 @@ function draw() {
         }
         nextGeneration();
         console.log(recordDistance)
+        document.getElementById('distance_out').innerHTML = "Distance: "+Math.round(recordDistance)
     } 
 }
 
@@ -290,11 +286,22 @@ function Toggle_btn() {
     if(start_sim === true)
     {
         start_sim = false;
-        document.getElementById('sim_btn').innerHTML = "Start Sim"
+        document.getElementById('sim_btn').innerHTML = "EVOLVE"
+        document.getElementById('add_city_btn').style.display = "block"
+        document.getElementById('population_size').disabled = false;
+        document.getElementById('mutation_rate').disabled = false;
+        document.getElementById('sim_btn').style.background =  "linear-gradient(to right, #3297e5, #0e4b8c )"
     }
     else{
         start_sim = true;
-        document.getElementById('sim_btn').innerHTML = "Stop Sim"
+        initialize = true;
+        recordDistance = Infinity
+        document.getElementById('sim_btn').innerHTML = "STOP"
+        document.getElementById('population_size').disabled = true;
+        document.getElementById('mutation_rate').disabled = true;
+        document.getElementById('add_city_btn').style.display = "none"
+        document.getElementById('sim_btn').style.background =  "linear-gradient(to right, #e53280, #8c0e57 )"
+        
     }
 }
 
@@ -302,10 +309,23 @@ function AddCity_btn() {
     if(addCity === true)
     {
         addCity = false;
-        document.getElementById('add_city_btn').innerHTML = "EDIT"   }
+        document.getElementById('add_city_btn').innerHTML = "DRAW MODE"
+        document.getElementById('add_city_btn').style.background = "white"
+        document.getElementById('add_city_btn').style.color = "black"
+        //document.getElementById ('sim_btn').style.display = "block";
+        document.getElementById('distance_out').style.display = "block"
+        document.getElementById('input_params').style.display = "block"
+        document.getElementById('rem_city_btn').style.display = "none"
+         }
     else{
         addCity = true;
-        document.getElementById('add_city_btn').innerHTML = "ADD CITY"
+        document.getElementById('add_city_btn').innerHTML = "EXIT DRAW"
+        document.getElementById('add_city_btn').style.background = "red"
+        document.getElementById('add_city_btn').style.color = "white"
+        document.getElementById ('sim_btn').style.display = "none";
+        document.getElementById('distance_out').style.display = "none"
+        document.getElementById('input_params').style.display = "none"
+        document.getElementById('rem_city_btn').style.display = "block"
     }
 }
 
@@ -313,13 +333,30 @@ function Reset_btn() {
     cities.length = 0
     recordDistance = Infinity
     bestRoute.length = 0
+    graphBR.length = 0
 
  population_size = 0
 
  mutation_rate = 0.0
     clear()
     initialize = true
+    document.getElementById('population_size').value = "";
+    document.getElementById('mutation_rate').value = "";
+    document.getElementById('distance_out').innerHTML = "Distance: "
 
+}
+
+function removeCity_btn(){
+    cities.pop()
+    total_cities = cities.length
+    make_order()
+    testRoute = order
+    bestRoute = order
+
+}
+
+function showSolve(){
+    
 }
 
 

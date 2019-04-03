@@ -4,12 +4,12 @@ let win
 
 function createWindow () {
   
-  win = new BrowserWindow({ width: 1400, height: 1000 })
+  win = new BrowserWindow({ width: 1400, height: 900 })
 
   win.loadFile('index.html')
 
-  win.webContents.openDevTools()
-
+  //win.webContents.openDevTools()
+  win.setResizable(false)
   win.on('closed', () => {
     win = null
   })

@@ -1,22 +1,48 @@
 <!DOCTYPE html>
- <html">
+<html">
+
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>    
-        <link rel="stylesheet" href="">
-        <script type = "text/javascript" src="GA.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+        <script type="text/javascript" src="GA.js"></script>
     </head>
+
     <body>
-        
-        <input type='text' id="population_size">
-        <input type='text' id="mutation_rate">
-        <button onclick="Toggle_btn()" id="sim_btn">Start Sim</button>
-        <button onclick="Reset_btn()" id="res_btn">Reset</button>
-        <button onclick="AddCity_btn()" id="add_city_btn">Edit City</button>
-        
+        <div=class="main">
+            <div id="toolbar">
+                <header>
+                    <h1>TRAVELLING SALESMAN PROBLEM</h1>
+                    <h4>using Genetic Algorithm</h4>
+                </header>
+                <div id="input_params">
+                    <p>Population Size:</p>
+                    <input onchange="showSolve()" type='text' id="population_size">
+                    <p>Mutation Rate: (between 0 - 1)</p>
+                    <input onchange="showSolve()" type='text' id="mutation_rate">
+                </div>
+
+                <button onclick="Toggle_btn()" id="sim_btn">EVOLVE</button>
+
+                <button onclick="AddCity_btn()" id="add_city_btn">DRAW MODE</button>
+                <button onclick="removeCity_btn()" id="rem_city_btn">Remove last added city</button>
+                <h2 id="distance_out">Distance:</h2>
+                <p id="reset_entire" onclick="Reset_btn()" style="vertical-align: bottom">Reset Problem </p>
+            </div>
+
+            <div id="city_map">
+                <p id="distance_out"></p>
+            </div>
+            </div>
+
+
     </body>
+
+
 </html>
