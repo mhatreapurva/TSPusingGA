@@ -56,7 +56,6 @@ function normalizeFitness(){
     for( let i=0; i < population_size; i++){
         fitness[i] = fitness[i] / total_fitness;
     }
-   
 }
 
 
@@ -72,9 +71,6 @@ function calculateFitness(){
 }
 
 function generate_init_pop(){
-    
-    
-
     for (let i=0; i < population_size; i++){
         population[i] = order.slice()
         sshuffle(population[i])
@@ -86,18 +82,19 @@ function calculateDistance(route){
 
     var total_distance = 0
 
-    for (let i=0; i < total_cities; i = i + 2 ){
+    for (let i=0; i < total_cities; i++ ){
         let cityA = population[route][i]
         let cityB = population[route][i+1]
         total_distance = total_distance + Math.sqrt(Math.pow((cities[cityB][0] - cities[cityA][0]), 2) + Math.pow((cities[cityB][1] - cities[cityA][1]), 2 ) );
     }
 
     testRoute = population[route]
+
     if (total_distance < recordDistance){
         recordDistance = total_distance;
         bestRoute = population[route];
     }
-    return Math.round(total_distance);
+    return (total_distance);
 }
 
 function matingPoolSelection(arr, probability){
@@ -144,6 +141,23 @@ function orderedCrossover(a,b){
     return breed
 }
 
+function orderedCrossover2(a,b){
+    let cutoff = Math.floor((Math.random() * (total_cities) + 1));  
+
+    let breed = []
+
+    breed.concat(a.slice(0,cutoff)) 
+
+    for(let i = 0; i < b.length; i++){
+        if(breed.indexOf(b[i]) === -1){
+            breed.push(b[i]);
+        }
+    }
+    breed.push(breed[0])
+   
+    return breed
+}
+
 function nextGeneration(){
     let new_population = []
     let j = []
@@ -155,7 +169,7 @@ function nextGeneration(){
         parentA = matingPoolSelection(population, fitness)
         parentB = matingPoolSelection(population, fitness)
         
-        j = orderedCrossover(parentA, parentB)
+        j = orderedCrossover2(parentA, parentB)
         new_population[i] = swapMutate(j)
        
     }
@@ -172,11 +186,11 @@ function setup() {
     cities.length = 0
 
     // cities = sample_coords_1
-    total_cities = cities.length
-    make_order()
-    bestRoute = order
-    testRoute = order
-    generate_init_pop();
+    // total_cities = cities.length
+    // make_order()
+    // bestRoute = order
+    // testRoute = order
+    // generate_init_pop();
   
 }
 
@@ -188,22 +202,26 @@ function show() {
     fill(255);
     stroke(0)
     circle(cities[0][0], cities[0][1], 13);
+    fill(10)
+    text('STARTING CITY',cities[0][0]+10, cities[0][1]+10)
     
+    noStroke()
     for(let i = 1; i < total_cities; i++){
         fill(0)
-        noStroke()
         circle(cities[i][0], cities[i][1], 6);
+        fill(10)
+        text('City '+i,cities[i][0]+8, cities[i][1]+8)
     }
     
+    stroke(221,8,69);    
+    strokeWeight(2);
     for(let i = 0; i < total_cities; i++){
-        stroke(221,8,69);    
-        strokeWeight(2);
         line(cities[bestRoute[i]][0],cities[bestRoute[i]][1],cities[bestRoute[i+1]][0],cities[bestRoute[i+1]][1]);
     }
 
+    stroke(216,216,216);    
+    strokeWeight(1);
     for(let i = 0; i < total_cities; i++){
-        stroke(216,216,216);    
-        strokeWeight(1);
         line(cities[testRoute[i]][0],cities[testRoute[i]][1],cities[testRoute[i+1]][0],cities[testRoute[i+1]][1]);
     }
 }
@@ -217,10 +235,13 @@ function make_order(){
 }
 
 function addToCity(x){
-    if(cities.indexOf(x) === -1)
-    {cities.push([x[0],x[1]])
+    cities.push([x[0],x[1]])
     total_cities = cities.length
-    console.log(cities)}
+    make_order()
+    console.log("City Added:", cities[total_cities-1])
+    testRoute = order
+    bestRoute = order
+    
 }
 
 
@@ -231,6 +252,7 @@ function draw() {
 
     if(addCity == true){
         
+        document.getElementById('sim_btn').disabled = true;
        
         if(mouseIsPressed && pmouseX > 0 && pmouseY > 0){
            x = [pmouseX, pmouseY] 
@@ -238,14 +260,15 @@ function draw() {
         }
         if(x.length > 0)
        { addToCity(x)              
-        make_order()
-        testRoute = order
-        bestRoute = order
+        
         clear()
         show()
         x.length = 0
         }
             
+    }else {
+        document.getElementById('sim_btn').disabled = false;
+
     }
     
   
@@ -288,6 +311,12 @@ function AddCity_btn() {
 
 function Reset_btn() {
     cities.length = 0
+    recordDistance = Infinity
+    bestRoute.length = 0
+
+ population_size = 0
+
+ mutation_rate = 0.0
     clear()
     initialize = true
 
