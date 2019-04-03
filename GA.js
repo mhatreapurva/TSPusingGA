@@ -20,6 +20,9 @@ var testRoute = []
 
 var start_sim = false
 var initialize = true
+var addCity = false
+
+var x = []
 
 function swapp (a,b, arr) {
    
@@ -69,6 +72,8 @@ function calculateFitness(){
 }
 
 function generate_init_pop(){
+    
+    
 
     for (let i=0; i < population_size; i++){
         population[i] = order.slice()
@@ -162,30 +167,16 @@ function nextGeneration(){
 
 function setup() {
     createCanvas(1000,900)
-    background(255)
+    background(255,251,247)
 
     cities.length = 0
 
-    cities = sample_coords_1
+    // cities = sample_coords_1
     total_cities = cities.length
-    
-    for (i = 0 ; i < total_cities;i++ ){
-        order.push(i)
-    }
-    order.push(0);
-    
-    generate_init_pop();
-
-    fill('red');
-    noStroke()
-    circle(cities[0][0], cities[0][1], 10);
-    fill(0);
-    for(let i = 1; i < total_cities; i++){
-        circle(cities[i][0], cities[i][1], 6);
-    }
-    testRoute = order
+    make_order()
     bestRoute = order
-    show()
+    testRoute = order
+    generate_init_pop();
   
 }
 
@@ -211,21 +202,52 @@ function show() {
     }
 
     for(let i = 0; i < total_cities; i++){
-        stroke(10);    
+        stroke(216,216,216);    
         strokeWeight(1);
         line(cities[testRoute[i]][0],cities[testRoute[i]][1],cities[testRoute[i+1]][0],cities[testRoute[i+1]][1]);
     }
+}
 
+function make_order(){
+    order.length = 0
+    for (i = 0 ; i < total_cities;i++ ){
+        order.push(i)
+    }
+    order.push(0);
+}
 
-
+function addToCity(x){
+    if(cities.indexOf(x) === -1)
+    {cities.push([x[0],x[1]])
+    total_cities = cities.length
+    console.log(cities)}
 }
 
 
 function draw() {
-       
-  
+    
     population_size = document.getElementById('population_size').value;
     mutation_rate = document.getElementById('mutation_rate').value;
+
+    if(addCity == true){
+        
+       
+        if(mouseIsPressed && pmouseX > 0 && pmouseY > 0){
+           x = [pmouseX, pmouseY] 
+            
+        }
+        if(x.length > 0)
+       { addToCity(x)              
+        make_order()
+        testRoute = order
+        bestRoute = order
+        clear()
+        show()
+        x.length = 0
+        }
+            
+    }
+    
   
     if(start_sim === true && population_size > 0 && mutation_rate > 0){
         clear()  
@@ -241,9 +263,6 @@ function draw() {
 
 
 
-
-
-
 function Toggle_btn() {
     if(start_sim === true)
     {
@@ -256,8 +275,22 @@ function Toggle_btn() {
     }
 }
 
+function AddCity_btn() {
+    if(addCity === true)
+    {
+        addCity = false;
+        document.getElementById('add_city_btn').innerHTML = "EDIT"   }
+    else{
+        addCity = true;
+        document.getElementById('add_city_btn').innerHTML = "ADD CITY"
+    }
+}
+
 function Reset_btn() {
+    cities.length = 0
+    clear()
     initialize = true
+
 }
 
 
